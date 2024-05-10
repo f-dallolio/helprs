@@ -23,9 +23,19 @@ encall0 <- function(x){
 
 #' @rdname encall
 #' @export
-encall <- function(x, ..., .args = NULL, .ns = NULL){
+encall_replace <- function(x, ..., .args = NULL, .ns = NULL){
   check_dots_empty()
   call_replace(x = encall0(x), .args = .args, .ns = .ns)
+}
+
+#' @rdname encall
+#' @export
+encall <- function(x, .simplify = TRUE){
+  if(length(x) == 1 && .simplify) {
+    encall0(x)
+  } else {
+    encalls(!!!x)
+  }
 }
 
 #' @rdname encall

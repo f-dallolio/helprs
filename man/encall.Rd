@@ -3,12 +3,15 @@
 \name{encall}
 \alias{encall}
 \alias{encall0}
+\alias{encall_replace}
 \alias{encalls}
 \title{Objects as calls}
 \usage{
 encall0(x)
 
-encall(x, ..., .args = NULL, .ns = NULL)
+encall_replace(x, ..., .args = NULL, .ns = NULL)
+
+encall(x, .simplify = TRUE)
 
 encalls(
   ...,
