@@ -10,7 +10,7 @@
 #' @rdname objs-are
 #' @export
 are <- function(.x, .p){
-  map_lgl(.x = x, .f = .p)
+  map_lgl(.x = .x, .f = .p)
 }
 #' @rdname objs-are
 #' @export
@@ -20,7 +20,7 @@ arenot <- function(.x, .p, .all = FALSE){
 #' @rdname objs-are
 #' @export
 is <- function(.x, .p){
-  if(is_symbolic(x)){ x <- list(x) }
+  if(is_symbolic(.x)){ .x <- list(.x) }
   every(.x = .x, .p = .p)
 }
 #' @rdname objs-are
