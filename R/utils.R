@@ -11,8 +11,3 @@ is_symbol2 <- function(x){
   is_ns_sym(x) || is_symbol(x)
 }
 
-
-
-
-
-
