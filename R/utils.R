@@ -13,7 +13,7 @@ is_symbol2 <- function(x){
   }
   is_ns_sym(x) || is_symbol(x)
 }
-
+#' @export
 is_symbolic2 <- function(x){
   if(is_quosure(x)){
     x <- quo_get_expr(x)
