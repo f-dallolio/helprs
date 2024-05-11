@@ -3,6 +3,7 @@ call_eval0 <- function (x, ..., data = NULL, env = caller_env()) {
   stopifnot(is_call(x))
   eval_tidy(expr = x, data = data, env = env)
 }
+#' @export
 call_eval <- function (x, ..., data = NULL, env = caller_env()) {
   x <- encall(x)
   if(is_vector(x)){
