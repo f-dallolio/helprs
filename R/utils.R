@@ -51,3 +51,11 @@ get_fns <- function (x = NULL, ..., ns = NULL, names_only = TRUE, exports_only =
 get_fns_export <- function (x = NULL, ..., ns = NULL, names_only = TRUE){
   get_fns(x = x, ns = ns, names_only = names_only, exports_only = TRUE)
 }
+#' @export
+ns_names <- function (ns, exports_only = FALSE) {
+  get_fns(x = NULL, ns = ns, names_only = TRUE, exports_only = exports_only)
+}
+#' @export
+ns_exports <- function (ns) {
+  get_fns(x = NULL, ns = ns, names_only = TRUE, exports_only = TRUE)
+}
