@@ -1,5 +1,4 @@
 eval_if0 <- function(x, .p, data = NULL, env = caller_env()){
-
   map_if(x, .p, eval_tidy, data = data, env = env)
 }
 eval_if <- function(..., .p, data = NULL, env = caller_env()){

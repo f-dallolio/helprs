@@ -30,12 +30,9 @@ encall_replace <- function(x, ..., .args = NULL, .ns = NULL){
 
 #' @rdname encall
 #' @export
-encall <- function(x, .simplify = TRUE){
-  if(length(x) == 1 && .simplify) {
-    encall0(x)
-  } else {
-    encalls(!!!x)
-  }
+encall <- function(x, .simplify = TRUE, .named = TRUE){
+  out <- map(as_list0(x), encall0)
+  out
 }
 
 #' @rdname encall

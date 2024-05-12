@@ -11,7 +11,7 @@ encall0(x)
 
 encall_replace(x, ..., .args = NULL, .ns = NULL)
 
-encall(x, .simplify = TRUE)
+encall(x, .simplify = TRUE, .named = TRUE)
 
 encalls(
   ...,
