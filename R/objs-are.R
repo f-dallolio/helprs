@@ -19,12 +19,12 @@ arenot <- function(.x, .p, .all = FALSE){
 }
 #' @rdname objs-are
 #' @export
-is <- function(.x, .p){
+obj_is <- function(.x, .p){
   if(is_symbolic(.x)){ .x <- list(.x) }
   every(.x = .x, .p = .p)
 }
 #' @rdname objs-are
 #' @export
 isnot <- function(.x, .p){
-  !is(.x = .x, .p = .p)
+  !obj_is(.x = .x, .p = .p)
 }

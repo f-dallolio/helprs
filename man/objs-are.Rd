@@ -4,7 +4,7 @@
 \alias{objs-are}
 \alias{are}
 \alias{arenot}
-\alias{is}
+\alias{obj_is}
 \alias{isnot}
 \title{Are objects...?}
 \usage{
@@ -12,7 +12,7 @@ are(.x, .p)
 
 arenot(.x, .p, .all = FALSE)
 
-is(.x, .p)
+obj_is(.x, .p)
 
 isnot(.x, .p)
 }
