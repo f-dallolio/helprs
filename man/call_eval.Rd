@@ -7,7 +7,7 @@
 \usage{
 call_eval0(x, ..., data = NULL, env = caller_env())
 
-call_eval(x, ..., data = NULL, env = caller_env())
+call_eval(x, ..., encall = TRUE, data = NULL, env = caller_env())
 }
 \arguments{
 \item{x}{a call (\code{call_eval0}) or an R object or list of objects (\code{call_eval0}) that will be passed to \code{encall(x)}.}

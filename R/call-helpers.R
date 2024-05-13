@@ -197,9 +197,13 @@ call_eval0 <- function(x, ..., data = NULL, env = caller_env()) {
 }
 #' @rdname call_eval
 #' @export
-call_eval <- function(x, ..., data = NULL, env = caller_env()) {
+call_eval <- function(x, ..., encall = TRUE, data = NULL, env = caller_env()) {
   check_dots_empty()
-  x <- encall(x, .simplify = FALSE)
-  out <- map(x, call_eval0, data = data, env = env)
+  if(!encall){
+    out <- eval2(x, data = data, env = env)
+    return(out)
+  }
+  out <- map(encall(x), call_eval0, data = data, env = env)
   out
 }
+
