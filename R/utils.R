@@ -35,23 +35,6 @@ as_list0 <- function(x) {
   }
 }
 
-auto_name_scalar <- function(x){
-  stopifnot(is_scalar_atomic(x) || is_callable(x))
-  encall0(x)
-  # if(is_string(x)){
-  #   x
-  # } else if (is_symbolic2(x) || is.numeric(x)){
-  #   deparse(x)
-  # } else if (is.function(x)){
-  #   paste0(fn_name(x, with_ns = FALSE),"()")
-  # } else {
-  #   stop("Cannot recognixe input")
-  # }
-}
-
-
-
-
 
 # builtins2 -----
 

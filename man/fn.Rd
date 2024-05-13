@@ -7,6 +7,7 @@
 \alias{fn_is_special}
 \alias{fn_is_builtin}
 \alias{fn_name}
+\alias{fn_sym}
 \alias{fn_names}
 \alias{fn_set_name}
 \alias{fn_ns}
@@ -24,7 +25,9 @@ fn_is_special(fn)
 
 fn_is_builtin(fn)
 
-fn_name(fn, with_ns = TRUE)
+fn_name(fn, with_ns = TRUE, single_out = TRUE)
+
+fn_sym(fn)
 
 fn_names(..., with_ns = TRUE)
 
