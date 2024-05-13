@@ -29,7 +29,7 @@ fn_is_builtin <- function(fn) {
 }
 #' @rdname fn
 #' @export
-fn_name <- function(fn, with_ns =TRUE, single_out = TRUE){
+fn_name <- function(fn, with_ns =TRUE, .first_out = TRUE){
   envir <- environment(fn)
   if(is.null(envir)){
     ns <- "base"
@@ -41,7 +41,7 @@ fn_name <- function(fn, with_ns =TRUE, single_out = TRUE){
   ns_fns <- rlang::env_get_list(envir, ns_fn_names)
   fn2 <- purrr::keep(ns_fns, rlang::is_reference, x = fn)
   nm <- names(fn2)
-  if(single_out){
+  if(.first_out){
     nm <- nm[[1]]
   }
   if(ns == "R_GlobalEnv" || !with_ns){ return(nm) }
@@ -55,8 +55,28 @@ fn_name <- function(fn, with_ns =TRUE, single_out = TRUE){
 }
 #' @rdname fn
 #' @export
-fn_sym <- function(fn){
-  str2lang(fn_name(fn))
+fn_name_no_ns <- function(fn){
+  fn_name(fn, with_ns = FALSE)
+}
+#' @rdname fn
+#' @export
+fn_name_with_ns <- function(fn){
+  fn_name(fn, with_ns = TRUE)
+}
+#' @rdname fn
+#' @export
+fn_sym <- function(fn, with_ns = TRUE){
+  str2lang(fn_name(fn, with_ns = TRUE))
+}
+#' @rdname fn
+#' @export
+fn_sym_no_ns <- function(fn){
+  str2lang(fn_name(fn, with_ns = FALSE))
+}
+#' @rdname fn
+#' @export
+fn_sym_with_ns <- function(fn){
+  str2lang(fn_name(fn, with_ns = TRUE))
 }
 #' @rdname fn
 #' @export
@@ -134,3 +154,14 @@ fn_is_export <- function(fn, ns = NULL) {
   nm <- fn_name(fn, with_ns = FALSE)
   nm %in% ns_exports_names(ns)
 }
+#' @rdname fn
+#' @export
+fn_fmls_syms0 <- function(fn, no_dots = TRUE){
+  nms <- fn_fmls_syms(fn)
+  if(no_dots){
+    dots_flag <- names(nms) != ""
+    return(nms[dots_flag])
+  }
+  nms
+}
+

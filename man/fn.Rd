@@ -7,7 +7,11 @@
 \alias{fn_is_special}
 \alias{fn_is_builtin}
 \alias{fn_name}
+\alias{fn_name_no_ns}
+\alias{fn_name_with_ns}
 \alias{fn_sym}
+\alias{fn_sym_no_ns}
+\alias{fn_sym_with_ns}
 \alias{fn_names}
 \alias{fn_set_name}
 \alias{fn_ns}
@@ -15,6 +19,7 @@
 \alias{fn_in_ns}
 \alias{fn_is_private}
 \alias{fn_is_export}
+\alias{fn_fmls_syms0}
 \title{Extend rlang's fn functions}
 \usage{
 fn_type(fn)
@@ -25,9 +30,17 @@ fn_is_special(fn)
 
 fn_is_builtin(fn)
 
-fn_name(fn, with_ns = TRUE, single_out = TRUE)
+fn_name(fn, with_ns = TRUE, .first_out = TRUE)
 
-fn_sym(fn)
+fn_name_no_ns(fn)
+
+fn_name_with_ns(fn)
+
+fn_sym(fn, with_ns = TRUE)
+
+fn_sym_no_ns(fn)
+
+fn_sym_with_ns(fn)
 
 fn_names(..., with_ns = TRUE)
 
@@ -42,6 +55,8 @@ fn_in_ns(fn, ns)
 fn_is_private(fn, ns = NULL)
 
 fn_is_export(fn, ns = NULL)
+
+fn_fmls_syms0(fn, no_dots = TRUE)
 }
 \arguments{
 \item{fn}{a function.}
