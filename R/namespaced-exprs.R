@@ -14,8 +14,8 @@ NULL
 #'
 #' @rdname namespaced-exprs
 #' @export
-is_ns_sym <- function (x, ..., ns = NULL, private = NULL, quote = TRUE) {
-  if(quote && is_string(x)){
+is_ns_sym <- function(x, ..., ns = NULL, private = NULL, quote = TRUE) {
+  if (quote && is_string(x)) {
     x <- str2lang(x)
   }
   rlang:::is_namespaced_symbol(x = x, ns = ns, private = private)
@@ -23,20 +23,20 @@ is_ns_sym <- function (x, ..., ns = NULL, private = NULL, quote = TRUE) {
 #'
 #' @rdname namespaced-exprs
 #' @export
-is_ns_sym_export <- function (x, ..., ns = NULL, quote = TRUE) {
+is_ns_sym_export <- function(x, ..., ns = NULL, quote = TRUE) {
   is_ns_sym(x, ns = ns, private = FALSE, quote = quote)
 }
 #'
 #' @rdname namespaced-exprs
 #' @export
-is_ns_sym_private <- function (x, ..., ns = NULL, quote = TRUE) {
+is_ns_sym_private <- function(x, ..., ns = NULL, quote = TRUE) {
   is_ns_sym(x, ns = ns, private = TRUE, quote = quote)
 }
 #'
 #' @rdname namespaced-exprs
 #' @export
-is_ns_call <- function (x, ..., ns = NULL, private = NULL, quote = TRUE) {
-  if(quote && is_string(x)){
+is_ns_call <- function(x, ..., ns = NULL, private = NULL, quote = TRUE) {
+  if (quote && is_string(x)) {
     x <- str2lang(x)
   }
   rlang:::is_namespaced_call(x = x, ns = ns, private = private)
@@ -44,12 +44,12 @@ is_ns_call <- function (x, ..., ns = NULL, private = NULL, quote = TRUE) {
 #'
 #' @rdname namespaced-exprs
 #' @export
-is_ns_call_export <- function (x, ..., ns = NULL, quote = TRUE) {
+is_ns_call_export <- function(x, ..., ns = NULL, quote = TRUE) {
   is_ns_call(x, ns = ns, private = FALSE, quote = quote)
 }
 #'
 #' @rdname namespaced-exprs
 #' @export
-is_ns_call_private <- function (x, ..., ns = NULL, quote = TRUE) {
+is_ns_call_private <- function(x, ..., ns = NULL, quote = TRUE) {
   is_ns_call(x, ns = ns, private = TRUE, quote = quote)
 }

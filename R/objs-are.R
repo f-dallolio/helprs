@@ -9,22 +9,24 @@
 #'
 #' @rdname objs-are
 #' @export
-are <- function(.x, .p){
+are <- function(.x, .p) {
   map_lgl(.x = .x, .f = .p)
 }
 #' @rdname objs-are
 #' @export
-arenot <- function(.x, .p, .all = FALSE){
+arenot <- function(.x, .p, .all = FALSE) {
   !are(.x, .p = .p, .all = .all)
 }
 #' @rdname objs-are
 #' @export
-obj_is <- function(.x, .p){
-  if(is_symbolic(.x)){ .x <- list(.x) }
+obj_is <- function(.x, .p) {
+  if (is_symbolic(.x)) {
+    .x <- list(.x)
+  }
   every(.x = .x, .p = .p)
 }
 #' @rdname objs-are
 #' @export
-isnot <- function(.x, .p){
+isnot <- function(.x, .p) {
   !obj_is(.x = .x, .p = .p)
 }

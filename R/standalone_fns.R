@@ -1,6 +1,5 @@
 #' @export
-standalone_move <- function(){
-
+standalone_move <- function() {
   pkg_dir <- here::here()
 
   r_dir <- fs::path(pkg_dir, "R")
@@ -18,20 +17,17 @@ standalone_move <- function(){
   walk2(stdln_paths, new_paths, fs::file_copy, overwrite = TRUE)
 
   walk(stdln_paths, fs::file_delete)
-
 }
 
 #' @export
-standalone_rewrite <- function(path, nm){
-
+standalone_rewrite <- function(path, nm) {
   x <- str_flatten(readLines(x), collapse = "\n")
 
   sprintf("\n# %s -----\n#\n%s", nm, x)
-
 }
 
 #' @export
-standalone_append <- function(){
+standalone_append <- function() {
   stdln_dir <- fs::path(pkg_dir, "standalone_files")
 
   stdln_paths <- as.character(fs::dir_ls(stdln_dir))
@@ -46,13 +42,4 @@ standalone_append <- function(){
   cat(out, sep = "\n#\n", file = "R/export_standalones.R")
 
   styler::style_file("R/export_standalones.R")
-
 }
-
-
-
-
-
-
-
-

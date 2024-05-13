@@ -27,7 +27,7 @@ get_fn <- function(x,
   }
   out <- get0(x = x, envir = envir, mode = "function", ifnotfound = ifnotfound)
   out <- as_closure(out)
-  if(is.null(ns)){
+  if (is.null(ns)) {
     return(out)
   }
   environment(out) <- asNamespace(ns)
@@ -59,16 +59,17 @@ get_fn <- function(x,
 get_ns_fns <- function(ns,
                        ...,
                        ifnotfound = NULL,
-                       exports_only = FALSE){
-  if(exports_only){
+                       exports_only = FALSE) {
+  if (exports_only) {
     x <- ns_exports_names(ns)
   } else {
     x <- ns_fn_names(ns)
   }
   out <- map(x,
-             get0,
-             envir = asNamespace(ns),
-             ifnotfound = ifnotfound)
+    get0,
+    envir = asNamespace(ns),
+    ifnotfound = ifnotfound
+  )
   names(out) <- x
   fns_out <- keep(out, is.function)
   fns_out <- modify_if(fns_out, fn_is_builtin, as_closure)

@@ -11,10 +11,10 @@ NULL
 #' @export
 #'
 # #' @examples
-ns_fn_names <- function (ns,
-                         exports_only = FALSE) {
+ns_fn_names <- function(ns,
+                        exports_only = FALSE) {
   envir <- asNamespace(ns)
-  if(exports_only){
+  if (exports_only) {
     out <- getNamespaceExports(ns)
   } else {
     out <- names(envir)
@@ -25,11 +25,11 @@ ns_fn_names <- function (ns,
 }
 #' @rdname namespace-fn-names
 #' @export
-ns_exports_names <- function (ns) {
+ns_exports_names <- function(ns) {
   ns_fn_names(ns, exports_only = TRUE)
 }
 #' @rdname namespace-fn-names
 #' @export
-ns_private_names <- function (ns) {
+ns_private_names <- function(ns) {
   setdiff(ns_fn_names(ns), ns_fn_names(ns, exports_only = TRUE))
 }

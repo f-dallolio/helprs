@@ -10,14 +10,14 @@ NULL
 #'
 #' @rdname evaluate-call
 #' @export
-call_eval0 <- function (x, ..., data = NULL, env = caller_env()) {
+call_eval0 <- function(x, ..., data = NULL, env = caller_env()) {
   check_dots_empty()
   stopifnot(is_call(x))
   eval_tidy(expr = x, data = data, env = env)
 }
 #' @rdname evaluate-call
 #' @export
-call_eval <- function (x, ..., data = NULL, env = caller_env()) {
+call_eval <- function(x, ..., data = NULL, env = caller_env()) {
   check_dots_empty()
   x <- encall(x, .simplify = FALSE)
   out <- map(x, call_eval0, data = data, env = env)
