@@ -1,8 +1,9 @@
+# utils -----
+
 #' @export
 not_in <- function(x, vals) {
   !x %in% vals
 }
-
 #' @export
 as_string2 <- function(x) {
   out <- try(as_string(x), silent = TRUE)
@@ -32,4 +33,57 @@ as_list0 <- function(x) {
   } else {
     list(x)
   }
+}
+
+auto_name_scalar <- function(x){
+  stopifnot(is_scalar_atomic(x) || is_callable(x))
+  encall0(x)
+  # if(is_string(x)){
+  #   x
+  # } else if (is_symbolic2(x) || is.numeric(x)){
+  #   deparse(x)
+  # } else if (is.function(x)){
+  #   paste0(fn_name(x, with_ns = FALSE),"()")
+  # } else {
+  #   stop("Cannot recognixe input")
+  # }
+}
+
+
+
+
+
+# builtins2 -----
+
+#' Extension of `base::builtins()`.
+#'
+#' @inheritParams base::builtins
+#' @param type a string. One of `"all"`, `"closure"`, `"builtin"`, or `"sprcial"`. `"all"` is equivalent to `base::builtins()`. `"closure"` retains only the functions with type `"closure"`, `"builtin"` the functions with type `"builtin"`, and `"special"` the functions with type `"special"`.
+#'
+#' @return a list of functions.
+#' @name builtins2
+NULL
+#'
+#' @rdname builtins2
+#' @export
+builtins2 <- function(type = c("all", "closure", "builtin", "sprcial"),
+                      internal = FALSE) {
+  type <- match.arg(type, several.ok = TRUE)
+  all_type <- "all" %in% type
+  fns <- get_fns(builtins(internal = internal))
+  types <- map_chr(fns, typeof)
+  if (all_type) {
+    return(fns)
+  }
+  fns[types %in% type]
+}
+#' @rdname builtins2
+#' @export
+special_fns <- function(internal = FALSE) {
+  builtins2(internal = FALSE, type = "special")
+}
+#' @rdname builtins2
+#' @export
+builtin_fns <- function(internal = FALSE) {
+  builtins2(internal = FALSE, type = "builtin")
 }

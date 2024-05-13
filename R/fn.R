@@ -4,7 +4,6 @@
 #' @param with_ns a logical. If `TRUE`, `fn_name(s)(*)` return  the name(s) of the functions as input including their namespace.
 #' @param ns a string. The name of a namespace.
 #'
-#' @return
 #' @name fn
 NULL
 #' @rdname fn
@@ -30,60 +29,32 @@ fn_is_builtin <- function(fn) {
 }
 #' @rdname fn
 #' @export
-fn_name <- function(fn, ..., with_ns = TRUE) {
-  stopifnot(is_function(fn))
-
-  fn_type <- typeof(fn)
-
-  if (fn_type %in% c("special", "NULL")) {
-    msg <- sprintf("Cannot retrieve the name of a function of type `%s`", fn_type)
-    stop(msg)
-  }
-
-  env <- environment(fn)
-
-  if (is.null(env)) {
-    ns_fns <- builtins2(type = c("special", "builtin"))
-    ns <- "base::"
+fn_name <- function(fn, with_ns =TRUE){
+  envir <- environment(fn)
+  if(is.null(envir)){
+    ns <- "base"
+    envir <- asNamespace(ns)
   } else {
-    ns0 <- environmentName(env)
-
-    if (ns0 == "R_GlobalEnv") {
-      ns_fns <- get_fns(x = ls(), names_only = FALSE)
-      ns <- ""
-    } else {
-      ns_fns <- get_export_fns(ns = ns0)
-      ns <- paste0(ns0, "::")
-    }
+    ns <- environmentName(envir)
   }
-
-  out_fns <- keep(ns_fns, identical, fn)
-
-  if (is_empty(out_fns)) {
-    ns_fns <- get_ns_fns(ns = ns0)
-    ns <- paste0(ns0, ":::")
-    out_fns <- keep(ns_fns, identical, fn)
-  }
-
-  if (with_ns) {
-    nms <- paste0(ns, names(out_fns))
-    # names(out_fns) <- nms
+  ns_fn_names <- c(unclass(lsf.str(envir = envir)))
+  ns_fns <- rlang::env_get_list(envir, ns_fn_names)
+  fn2 <- purrr::keep(ns_fns, rlang::is_reference, x = fn)
+  nm <- names(fn2)
+  if(ns == "R_GlobalEnv" || !with_ns){ return(nm) }
+  # if(ns == "base"){ return(paste0("base::", nm)) }
+  if(nm %in% getNamespaceExports(envir)){
+    op <- "::"
   } else {
-    nms <- names(out_fns)
+    op <- ":::"
   }
-
-  nms
+  sprintf("%s%s%s", ns, op, nm)
 }
 #' @rdname fn
 #' @export
 fn_names <- function(..., with_ns = TRUE) {
   x <- list2(...)
-  out <- character(length(x))
-  fn_flag <- map_lgl(x, is.function)
-  out[fn_flag] <- map_chr(x[fn_flag], fn_name,
-    names_only = TRUE, with_ns = with_ns
-  )
-  out
+  map_chr(x, fn_name)
 }
 #' @rdname fn
 #' @export
@@ -105,7 +76,6 @@ fn_ns <- function(fn) {
 #' @export
 fn_set_ns <- function(fn, ns) {
   stopifnot(is_function(fn))
-  stopifnot(is_string(fn))
   check_installed(ns)
   environment(fn) <- asNamespace(ns)
   fn

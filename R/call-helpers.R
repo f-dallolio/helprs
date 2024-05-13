@@ -129,6 +129,8 @@ NULL
 encall0 <- function(x) {
   if (is_string(x)) {
     x <- str2lang(x)
+  } else if (is.function(x)) {
+    x <- str2lang(fn_name(x, with_ns = FALSE))
   }
   stopifnot(is_symbolic(x))
   if (is_call_simple(x)) {
@@ -171,4 +173,33 @@ encalls <- function(...,
   chr_flag <- map_lgl(x, is_string)
   names(x)[chr_flag] <- x[chr_flag]
   map(x, encall0)
+}
+
+
+# call_eval -----
+
+#' Evaluate a call or a list of calls
+#'
+#' @param x a call (`call_eval0`) or an R object or list of objects (`call_eval0`) that will be passed to `encall(x)`.
+#' @param ... must remain empty.
+#' @param data a data frame, or named list or vector.
+#' @param env the environment in which to evaluate `x`.
+#'
+#' @name call_eval
+NULL
+#'
+#' @rdname call_eval
+#' @export
+call_eval0 <- function(x, ..., data = NULL, env = caller_env()) {
+  check_dots_empty()
+  stopifnot(is_call(x))
+  eval_tidy(expr = x, data = data, env = env)
+}
+#' @rdname call_eval
+#' @export
+call_eval <- function(x, ..., data = NULL, env = caller_env()) {
+  check_dots_empty()
+  x <- encall(x, .simplify = FALSE)
+  out <- map(x, call_eval0, data = data, env = env)
+  out
 }
