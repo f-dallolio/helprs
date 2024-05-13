@@ -8,10 +8,10 @@
 #'
 #' @return a function or list of functions.
 #'
-#' @name get-functions
+#' @name namespace-functions
 NULL
 
-#' @rdname get-functions
+#' @rdname namespace-functions
 #' @export
 get_fn <- function(x,
                    ns = NULL,
@@ -33,37 +33,37 @@ get_fn <- function(x,
   environment(out) <- asNamespace(ns)
   out
 }
-#' @rdname get-functions
-#' @export
-get_fns <- function(x = NULL,
-                    ...,
-                    ns = NULL,
-                    ifnotfound = NULL,
-                    names_only = FALSE,
-                    exports_only = FALSE) {
-  check_dots_empty()
-  if (is.null(x)) {
-    if (exports_only) {
-      x <- getNamespaceExports(ns)
-    } else {
-      x <- names(asNamespace(ns))
-    }
-    if (names_only) {
-      return(x)
-    }
-  }
-  map(setNames(x, x), get_fn, ns = ns, ifnotfound = ifnotfound)
-}
-#' @rdname get-functions
+# #' @rdname namespace-functions
+# #' @export
+# get_fns <- function(x = NULL,
+#                     ...,
+#                     ns = NULL,
+#                     ifnotfound = NULL,
+#                     names_only = FALSE,
+#                     exports_only = FALSE) {
+#   check_dots_empty()
+#   if (is.null(x)) {
+#     if (exports_only) {
+#       x <- getNamespaceExports(ns)
+#     } else {
+#       x <- names(asNamespace(ns))
+#     }
+#     if (names_only) {
+#       return(x)
+#     }
+#   }
+#   map(setNames(x, x), get_fn, ns = ns, ifnotfound = ifnotfound)
+# }
+#' @rdname namespace-functions
 #' @export
 get_ns_fns <- function(ns,
                        ...,
                        ifnotfound = NULL,
                        exports_only = FALSE){
   if(exports_only){
-    x <- ns_exports(ns)
+    x <- ns_exports_names(ns)
   } else {
-    x <- ns_names(ns)
+    x <- ns_fn_names(ns)
   }
   out <- map(x,
              get0,
@@ -72,25 +72,10 @@ get_ns_fns <- function(ns,
   names(out) <- x
   fns_out <- keep(out, is.function)
   fns_out <- modify_if(fns_out, fn_is_builtin, as_closure)
-  modify(fns_out, fn_set_ns, "rlang")
+  modify(fns_out, fn_set_ns, ns)
 }
-#' @rdname get-functions
+#' @rdname namespace-functions
 #' @export
 get_export_fns <- function(ns = NULL) {
   get_ns_fns(ns = ns, exports_only = TRUE)
-}
-#' @rdname get-functions
-#' @export
-ns_names <- function (ns,
-                      exports_only = FALSE) {
-  if(exports_only){
-    getNamespaceExports(asNamespace(ns))
-  } else {
-    names(asNamespace(ns))
-  }
-}
-#' @rdname get-functions
-#' @export
-ns_exports <- function (ns) {
-  ns_names(ns, exports_only = TRUE)
 }
