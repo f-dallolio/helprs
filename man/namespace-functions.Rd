@@ -3,11 +3,26 @@
 \name{namespace-functions}
 \alias{namespace-functions}
 \alias{get_fn}
+\alias{get_fns}
+\alias{get_fns.ls_str}
+\alias{get_fns.environment}
+\alias{get_fns.character}
+\alias{get_fns.numeric}
 \alias{get_ns_fns}
 \alias{get_export_fns}
 \title{Get functions from function names and namespace}
 \usage{
 get_fn(x, ns = NULL, ifnotfound = NULL)
+
+get_fns(x)
+
+\method{get_fns}{ls_str}(x)
+
+\method{get_fns}{environment}(x)
+
+\method{get_fns}{character}(x)
+
+\method{get_fns}{numeric}(x)
 
 get_ns_fns(ns, ..., ifnotfound = NULL, exports_only = FALSE)
 

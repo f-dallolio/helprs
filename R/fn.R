@@ -24,35 +24,102 @@ fn_is_special <- function(fn) {
 }
 #' @rdname fn
 #' @export
-fn_is_builtin <- function(fn) {
-  fn_type(fn) == "builtin"
+fn_is_builtin_as_closure <- function(fn){
+  if(rlang::is_closure(fn)){
+    body <- body(fn)
+    if(rlang::is_symbol(body) | is.character(body)){
+      return(FALSE)
+    }
+    typeof(body[[1]]) == "builtin"
+  } else {
+    FALSE
+  }
 }
 #' @rdname fn
 #' @export
-fn_name <- function(fn, with_ns =TRUE, .first_out = TRUE){
-  envir <- environment(fn)
-  if(is.null(envir)){
-    ns <- "base"
-    envir <- asNamespace(ns)
-  } else {
-    ns <- environmentName(envir)
-  }
-  ns_fn_names <- c(unclass(lsf.str(envir = envir)))
-  ns_fns <- rlang::env_get_list(envir, ns_fn_names)
-  fn2 <- purrr::keep(ns_fns, rlang::is_reference, x = fn)
-  nm <- names(fn2)
-  if(.first_out){
-    nm <- nm[[1]]
-  }
-  if(ns == "R_GlobalEnv" || !with_ns){ return(nm) }
-  # if(ns == "base"){ return(paste0("base::", nm)) }
-  if(nm %in% getNamespaceExports(envir)){
-    op <- "::"
-  } else {
-    op <- ":::"
-  }
-  sprintf("%s%s%s", ns, op, nm)
+fn_is_builtin <- function(fn){
+  fn_is_builtin_as_closure(fn) || typeof(fn) == "builtin"
 }
+#' @rdname fn
+#' @export
+fn_revert_builtin <- function(fn){
+  if(fn_is_builtin_as_closure(fn)){
+    body <- body(fn)
+    if(rlang::is_symbol(body) || is.character(body)){
+      return(fn)
+    }
+    body[[1]]
+  } else {
+    fn
+  }
+}
+#' @rdname fn
+#' @export
+fn_reenv <- function(fn, env = globalenv()){
+  x <- map(as_list0(fn), fn_revert_builtin)
+  out <- map_if(x, Negate(fn_is_builtin), `environment<-`, env)
+  if(length(out) == 1){
+    out[[1]]
+  } else {
+    out
+  }
+}
+#' @rdname fn
+#' @export
+fn_name <- function(x, fns = NULL, ..., with_ns = TRUE, env = globalenv()){
+  if(is.null(fns)){
+    envir <- environment(x)
+    if(is.null(envir)){
+      ns <- "base"
+      envir <- asNamespace(ns)
+    } else {
+      ns <- environmentName(envir)
+    }
+    fns <- get_fns(ns)
+  }
+  x <- fn_reenv(x, env = env)
+  fns <- fn_reenv(fns, env = env)
+  out <- keep(fns, identical, x = x)
+  nms <- names(out)
+  nms <- nms[nms != ".Last.value"]
+  if(length(nms) > 1){
+    nms <- nms[[1]]
+  }
+  if(with_ns){
+    if(nms %in% getNamespaceExports(ns)){
+      op <- "::"
+    } else {
+      op <- ":::"
+    }
+    paste0(ns, op, nms)
+  } else {
+    nms
+  }
+}
+# fn_name <- function(fn, with_ns =TRUE, .first_out = TRUE){
+#   envir <- environment(fn)
+#   if(is.null(envir)){
+#     ns <- "base"
+#     envir <- asNamespace(ns)
+#   } else {
+#     ns <- environmentName(envir)
+#   }
+#   ns_fn_names <- c(unclass(lsf.str(envir = envir)))
+#   ns_fns <- rlang::env_get_list(envir, ns_fn_names)
+#   fn2 <- purrr::keep(ns_fns, rlang::is_reference, x = fn)
+#   nm <- names(fn2)
+#   if(.first_out && length(nm) >1){
+#     nm <- nm[[1]]
+#   }
+#   if(ns == "R_GlobalEnv" || !with_ns){ return(nm) }
+#   # if(ns == "base"){ return(paste0("base::", nm)) }
+#   if(nm %in% getNamespaceExports(envir)){
+#     op <- "::"
+#   } else {
+#     op <- ":::"
+#   }
+#   sprintf("%s%s%s", ns, op, nm)
+# }
 #' @rdname fn
 #' @export
 fn_name_no_ns <- function(fn){

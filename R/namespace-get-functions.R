@@ -56,6 +56,37 @@ get_fn <- function(x,
 # }
 #' @rdname namespace-functions
 #' @export
+get_fns <- function(x){
+  UseMethod("get_fns")
+}
+#' @rdname namespace-functions
+#' @export
+get_fns.ls_str <- function(x){
+  x <- unclass(x)
+  envir <- attr(x, "envir")
+  out <- lapply(x, get, envir = envir)
+  names(out) <- x
+  out
+}
+#' @rdname namespace-functions
+#' @export
+get_fns.environment <- function(x){
+  get_fns.ls_str(lsf.str(x))
+}
+#' @rdname namespace-functions
+#' @export
+get_fns.character <- function(x){
+  get_fns.environment(asNamespace(x))
+}
+#' @rdname namespace-functions
+#' @export
+get_fns.numeric <- function(x){
+  x <- pos.to.env(x)
+  get_fns.environment(x)
+}
+
+#' @rdname namespace-functions
+#' @export
 get_ns_fns <- function(ns,
                        ...,
                        ifnotfound = NULL,
@@ -72,7 +103,7 @@ get_ns_fns <- function(ns,
   )
   names(out) <- x
   fns_out <- keep(out, is.function)
-  fns_out <- modify_if(fns_out, fn_is_builtin, as_closure)
+  # fns_out <- modify_if(fns_out, fn_is_builtin, as_closure)
   modify(fns_out, fn_set_ns, ns)
 }
 #' @rdname namespace-functions

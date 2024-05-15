@@ -112,6 +112,73 @@ call_text <- function(x, ..., .simplify = FALSE) {
 }
 
 
+
+# enlang -----
+
+#' Objects as calls
+#'
+#' @inheritParams rlang::enexprs
+#' @param x a string, a symbol, or a call.
+#' @param ... strings or expressions to defuse.
+#'
+#' @return namespaced call(s).
+#' @name enlang
+NULL
+
+#' @rdname enlang
+#' @export
+enlang <- function(x){
+  # on_top <- sys.nframe() == 1
+  if(is.null(x)){
+    return(NULL)
+  }
+  if(is_quosure(x)){
+    return(quo_get_expr(x))
+  }
+  if(rlang::is_syntactic_literal(x)){
+    if(rlang::is_string(x)){
+      str2lang(x)
+    } else {
+      rlang::sym(as.character(x))
+    }
+  } else if(is.function(x)) {
+    str2lang(fn_name(x, with_ns = FALSE))
+  } else if(rlang::is_symbolic(x)){
+    x
+  } else {
+    cls <- class(x)
+    msg <- sprintf("Cannot convert an object of class `%s` to language", cls)
+    stop(msg)
+  }
+}
+#' @rdname enlang
+#' @export
+enlangs0 <- function(x, .named = FALSE){
+  out <- map(as_list0(x), enlang)
+  if(.named){
+    rlang::exprs_auto_name(out)
+  } else {
+    out
+  }
+}
+#' @rdname enlang
+#' @export
+enlangs <- function(..., .named = FALSE){
+  x <- rlang::list2(...)
+  enlangs0(x, .named = .named)
+}
+
+
+# enlangs <- function(x, .named = FALSE){
+#   out <- map(as_list0(x), enlang)
+#   if(.named){
+#     rlang::exprs_auto_name(out)
+#   } else {
+#     out
+#   }
+# }
+
+
 # encall -----
 
 #' Objects as calls
@@ -126,54 +193,86 @@ NULL
 
 #' @rdname encall
 #' @export
-encall0 <- function(x) {
-  if (is_string(x)) {
-    x <- str2lang(x)
-  } else if (is.function(x)) {
-    x <- str2lang(fn_name(x, with_ns = FALSE))
+encall <- function(x) {
+  x1 <- enlang(x)
+  if(is_symbol2(x1)){
+    return(as.call(list(x1)))
   }
-  stopifnot(is_symbolic(x))
-  if (is_call_simple(x)) {
-    return(x)
-  }
-  as.call(list(x))
+  x1
 }
-
 #' @rdname encall
 #' @export
-encall_replace <- function(x, ..., .args = NULL, .ns = NULL) {
+encall_replace0 <- function(x, ..., .args = NULL, .ns = NULL) {
   check_dots_empty()
-  call_replace(x = encall0(x), .args = .args, .ns = .ns)
+  call_replace(x = encall(x), .args = .args, .ns = .ns)
 }
-
 #' @rdname encall
 #' @export
-encall <- function(x, .simplify = TRUE, .named = TRUE) {
-  out <- map(as_list0(x), encall0)
-  out
+encall_replace <- function(x, ...,  .ns = NULL) {
+  .args <- rlang::list2(...)
+  encall_replace0(x, .args = .args, .ns = .ns)
 }
-
 #' @rdname encall
 #' @export
-encalls <- function(...,
-                    .named = TRUE,
-                    .ignore_empty = c("trailing", "none", "all"),
-                    .ignore_null = c("none", "all"),
-                    .unquote_names = TRUE,
-                    .homonyms = c("keep", "first", "last", "error"),
-                    .check_assign = FALSE) {
-  x <- enexprs(...,
-    .named = .named,
-    .ignore_empty = .ignore_empty,
-    .ignore_null = .ignore_null,
-    .unquote_names = .unquote_names,
-    .homonyms = .homonyms,
-    .check_assign = .check_assign
-  )
-  chr_flag <- map_lgl(x, is_string)
-  names(x)[chr_flag] <- x[chr_flag]
-  map(x, encall0)
+encalls0 <- function(x, .named = FALSE){
+  x1 <- enlangs0(x, .named = FALSE)
+  out <- modify_if(x1, is_symbol2, encall0)
+  if(.named){
+    exprs_auto_name(out)
+  } else {
+    out
+  }
 }
+#' @rdname encall
+#' @export
+encalls <- function(..., .named = FALSE){
+  x <- rlang::list2(...)
+  encalls0(x, .named = .named)
+}
+
+
+# encall0 <- function(x) {
+#   if (is_string(x)) {
+#     x <- str2lang(x)
+#   } else if (is.function(x)) {
+#     x <- str2lang(fn_name(x, with_ns = FALSE))
+#   }
+#   stopifnot(is_symbolic(x))
+#   if (is_call_simple(x)) {
+#     return(x)
+#   }
+#   as.call(list(x))
+# }
+
+# encall_replace <- function(x, ..., .args = NULL, .ns = NULL) {
+#   check_dots_empty()
+#   call_replace(x = encall0(x), .args = .args, .ns = .ns)
+# }
+
+# encall <- function(x, .simplify = TRUE, .named = TRUE) {
+#   out <- map(as_list0(x), encall0)
+#   out
+# }
+
+# encalls <- function(...,
+#                     .named = TRUE,
+#                     .ignore_empty = c("trailing", "none", "all"),
+#                     .ignore_null = c("none", "all"),
+#                     .unquote_names = TRUE,
+#                     .homonyms = c("keep", "first", "last", "error"),
+#                     .check_assign = FALSE) {
+#   x <- enexprs(...,
+#     .named = .named,
+#     .ignore_empty = .ignore_empty,
+#     .ignore_null = .ignore_null,
+#     .unquote_names = .unquote_names,
+#     .homonyms = .homonyms,
+#     .check_assign = .check_assign
+#   )
+#   chr_flag <- map_lgl(x, is_string)
+#   names(x)[chr_flag] <- x[chr_flag]
+#   map(x, encall0)
+# }
 
 
 # call_eval -----

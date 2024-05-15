@@ -5,7 +5,10 @@
 \alias{fn_type}
 \alias{fn_is_closure}
 \alias{fn_is_special}
+\alias{fn_is_builtin_as_closure}
 \alias{fn_is_builtin}
+\alias{fn_revert_builtin}
+\alias{fn_reenv}
 \alias{fn_name}
 \alias{fn_name_no_ns}
 \alias{fn_name_with_ns}
@@ -28,9 +31,15 @@ fn_is_closure(fn)
 
 fn_is_special(fn)
 
+fn_is_builtin_as_closure(fn)
+
 fn_is_builtin(fn)
 
-fn_name(fn, with_ns = TRUE, .first_out = TRUE)
+fn_revert_builtin(fn)
+
+fn_reenv(fn, env = globalenv())
+
+fn_name(x, fns = NULL, ..., with_ns = TRUE, env = globalenv())
 
 fn_name_no_ns(fn)
 

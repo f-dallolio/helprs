@@ -5,7 +5,6 @@
 #'
 #' @return a string.
 #' @export
-#'
 lang_to_str <- function(x, simplify = TRUE){
   stopifnot(is_symbolic(x))
   x0 <- as.list(x)

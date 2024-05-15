@@ -53,3 +53,26 @@ is_ns_call_export <- function(x, ..., ns = NULL, quote = TRUE) {
 is_ns_call_private <- function(x, ..., ns = NULL, quote = TRUE) {
   is_ns_call(x, ns = ns, private = TRUE, quote = quote)
 }
+
+scalar_type_sum <- function(x){
+  if(is_ns_sym(x)){
+    "ns_sym"
+  } else if (is_ns_call(x)) {
+    "ns_call"
+  } else if (rlang::is_symbol(x)) {
+    "sym"
+  } else if (rlang::is_call(x) && !is_ns_sym(x) && !is_ns_call(x)){
+    "call"
+  } else {
+    pillar::type_sum(x)
+  }
+}
+
+type_sum <- function(x, wrapper ="<{.x}>"){
+  x1 <- map_chr(x, scalar_type_sum)
+  ns_sym_id <- map_lgl(x1, is_ns_sym)
+  ns_call_id <- map_lgl(x1, is_ns_call)
+  x1[ns_sym_id] <- "ns_sym"
+  x1[ns_call_id] <- "ns_call"
+   glue_wrap(x1, wrapper = wrapper)
+}
