@@ -10,7 +10,7 @@
 \usage{
 are(.x, .p)
 
-arenot(.x, .p, .all = FALSE)
+arenot(.x, .p)
 
 obj_is(.x, .p)
 

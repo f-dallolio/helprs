@@ -14,8 +14,8 @@ are <- function(.x, .p) {
 }
 #' @rdname objs-are
 #' @export
-arenot <- function(.x, .p, .all = FALSE) {
-  !are(.x, .p = .p, .all = .all)
+arenot <- function(.x, .p) {
+  !are(.x, .p = .p)
 }
 #' @rdname objs-are
 #' @export
