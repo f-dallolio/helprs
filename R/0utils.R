@@ -35,6 +35,24 @@ as_list0 <- function(x) {
   }
 }
 #' @export
+list_simplify2 <- function(x){
+  x <- as_list0(x)
+  if(length(x) == 1){
+    x[[1]]
+  } else {
+    list_simplify(x)
+  }
+}
+#' @export
+eval2 <- function(x, simplify = TRUE, data = NULL, env = caller_env()) {
+  out <- map(as_list0(x), rlang::eval_tidy, data = data, env = env)
+  if(simplify){
+    list_simplify2(out)
+  } else {
+    out
+  }
+}
+#' @export
 str_embrace <- function(x,
                         wrap = NULL,
                         type = c("round",  "square", "curly",  "angle" )){
