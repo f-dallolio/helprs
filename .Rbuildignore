@@ -2,3 +2,6 @@
 ^\.Rproj\.user$
 ^temp-scripts$
 ^standalone_files$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

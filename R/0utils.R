@@ -35,6 +35,18 @@ as_list0 <- function(x) {
   }
 }
 #' @export
+list_t <- function (x, ...,
+                    template = NULL,
+                    simplify = NA,
+                    ptype = NULL,
+                    default = NULL) {
+  purrr::list_transpose(x,
+                        template = template,
+                        simplify = simplify,
+                        ptype = ptype,
+                        default = default)
+}
+#' @export
 list_simplify2 <- function(x){
   x <- as_list0(x)
   if(length(x) == 1){
